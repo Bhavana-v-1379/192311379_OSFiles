@@ -1,0 +1,36 @@
+1.ROUNDROBIN SCHEDULING:
+CODE:
+#include <stdio.h>
+#define MAX_PROCESSES 10
+void roundRobin(int processes[], int n, int burstTime[], int quantum) {
+int remainingTime[MAX_PROCESSES];
+for (int i = 0; i < n; i++) {
+remainingTime[i] = burstTime[i];
+}
+int time = 0;
+while (1) {
+int done = 1;
+for (int i = 0; i < n; i++) {
+if (remainingTime[i] > 0) {
+done = 0; // There is a pending process
+if (remainingTime[i] > quantum) {
+time += quantum;
+remainingTime[i] -= quantum;
+} else {
+time += remainingTime[i];
+remainingTime[i] = 0;
+printf("Process %d completed at time %d\n", processes[i], time);
+}
+}
+}
+if (done) break; // All processes are completed
+}
+}
+int main() {
+int processes[] = {0, 1, 2};
+int burstTime[] = {10, 5, 8};
+int quantum = 3;
+int n = sizeof(processes) / sizeof(processes[0]);
+roundRobin(processes, n, burstTime, quantum);
+return 0;
+}
