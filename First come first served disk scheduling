@@ -1,0 +1,21 @@
+#include <stdio.h>
+void FCFS(int arr[], int n) {
+    int wait_time[n], turnaround_time[n];
+    wait_time[0] = 0;
+    for (int i = 1; i < n; i++) {
+        wait_time[i] = arr[i - 1] + wait_time[i - 1];
+    }
+    for (int i = 0; i < n; i++) {
+        turnaround_time[i] = arr[i] + wait_time[i];
+    }
+    printf("Process\tBurst Time\tWaiting Time\tTurnaround Time\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d\t%d\t\t%d\t\t%d\n", i + 1, arr[i], wait_time[i], turnaround_time[i]);
+    }
+}
+int main() {
+    int arr[] = {10, 5, 8};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    FCFS(arr, n);
+    return 0;
+}
