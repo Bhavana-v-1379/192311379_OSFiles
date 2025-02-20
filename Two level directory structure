@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <string.h>
+void create_directory(const char *path) {
+    struct stat st = {0};
+    if (stat(path, &st) == -1) {
+        mkdir(path, 0700);
+    }
+}
+int main() {
+    const char *base_dir = "BaseDirectory";
+    const char *sub_dir1 = "BaseDirectory/SubDirectory1";
+    const char *sub_dir2 = "BaseDirectory/SubDirectory2";
+    create_directory(base_dir);
+    create_directory(sub_dir1);
+    create_directory(sub_dir2);
+    printf("Directory structure created successfully.\n");
+    return 0;
+}
