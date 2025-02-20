@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+void scanDiskScheduling(int arr[], int head, int size) {
+    int distance, seek_time = 0;
+    int cur_track;
+   
+    // Sort the requests in ascending order
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+
+    // Find the position of the head in the sorted array
+    int pos;
+    for (pos = 0; pos < size; pos++) {
+        if (arr[pos] >= head) {
+            break;
+        }
+    }
+    // Service the requests to the left of the head
+    for (int i = pos - 1; i >= 0; i--) {
+        cur_track = arr[i];
+        distance = abs(cur_track - head);
+        seek_time += distance;
+        head = cur_track;
+    }
+    // Service the requests to the right of the head
+    for (int i = pos; i < size; i++) {
+        cur_track = arr[i];
+        distance = abs(cur_track - head);
+        seek_time += distance;
+        head = cur_track;
+    }
+    printf("Total seek time: %d\n", seek_time);
+}
+int main() {
+    int arr[MAX], size, head;
+    printf("Enter the number of requests: ");
+    scanf("%d", &size);
+    printf("Enter the requests:\n");
+    for (int i = 0; i < size; i++) {
+        scanf("%d", &arr[i]);
+    }
+    printf("Enter the initial head position: ");
+    scanf("%d", &head);
+    scanDiskScheduling(arr, head, size);
+    return 0;
+}
