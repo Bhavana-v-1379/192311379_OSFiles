@@ -1,0 +1,65 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX_FILES 100
+#define FILENAME_LENGTH 50
+typedef struct {
+char name[FILENAME_LENGTH];
+int size;
+int start_block;
+} File;
+File file_table[MAX_FILES];
+int block_allocation[MAX_FILES] = {0};
+int total_blocks = 100; // Total number of blocks available
+int next_free_block = 0;
+void allocate_file(char *name, int size) {
+if (next_free_block + size > total_blocks) {
+printf("Not enough space to allocate file: %s\n", name);
+return;
+}
+File new_file;
+snprintf(new_file.name, FILENAME_LENGTH, "%s", name);
+new_file.size = size;
+new_file.start_block = next_free_block;
+for (int i = 0; i < size; i++) {
+block_allocation[next_free_block + i] = 1; // Mark block as allocated
+}
+file_table[next_free_block] = new_file;
+next_free_block += size;
+
+printf("File allocated: %s, Size: %d, Start Block: %d\n", new_file.name, new_file.size,
+
+new_file.start_block);
+
+}
+
+void display_files() {
+
+printf("Allocated Files:\n");
+
+for (int i = 0; i < MAX_FILES; i++) {
+
+if (file_table[i].size > 0) {
+
+printf("Name: %s, Size: %d, Start Block: %d\n", file_table[i].name, file_table[i].size,
+
+file_table[i].start_block);
+
+}
+
+}
+
+}
+
+int main() {
+
+allocate_file("file1.txt", 10);
+
+allocate_file("file2.txt", 20);
+
+allocate_file("file3.txt", 15);
+
+display_files();
+
+return 0;
+
+}
