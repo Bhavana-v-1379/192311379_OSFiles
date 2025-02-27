@@ -1,0 +1,77 @@
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#define FRAME_SIZE 4
+
+#define PAGE_SIZE 4
+
+#define TOTAL_PAGES 10
+
+int frames[FRAME_SIZE];
+
+int pageFaults = 0;
+
+void initializeFrames() {
+
+for (int i = 0; i < FRAME_SIZE; i++) {
+frames[i] = -1;
+
+}
+
+}
+
+int isPageInFrames(int page) {
+
+for (int i = 0; i < FRAME_SIZE; i++) {
+
+if (frames[i] == page) {
+
+return 1;
+
+}
+
+}
+
+return 0;
+
+}
+
+void addPageToFrames(int page) {
+
+static int nextFrame = 0;
+
+frames[nextFrame] = page;
+
+nextFrame = (nextFrame + 1) % FRAME_SIZE;
+
+}
+
+void fifoPaging(int pages[], int n) {
+
+initializeFrames();
+
+for (int i = 0; i < n; i++) {
+
+if (!isPageInFrames(pages[i])) {
+
+addPageToFrames(pages[i]);
+
+pageFaults++;
+
+}
+
+}
+
+}
+
+int main() {
+
+int pages[TOTAL_PAGES] = {0, 1, 2, 3, 0, 4, 0, 1, 2, 3};
+fifoPaging(pages, TOTAL_PAGES);
+
+printf("Total Page Faults: %d\n", pageFaults);
+
+return 0;
+
+}
