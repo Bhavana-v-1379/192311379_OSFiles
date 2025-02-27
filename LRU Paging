@@ -1,0 +1,134 @@
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#define FRAME_SIZE 3
+
+#define PAGE_SIZE 10
+
+typedef struct {
+
+int page_number;
+
+int last_used_time;
+
+} Page;
+
+Page frames[FRAME_SIZE];
+int time_counter = 0;
+
+void initialize_frames() {
+
+for (int i = 0; i < FRAME_SIZE; i++) {
+
+frames[i].page_number = -1;
+
+frames[i].last_used_time = -1;
+
+}
+
+}
+
+int find_page(int page_number) {
+
+for (int i = 0; i < FRAME_SIZE; i++) {
+
+if (frames[i].page_number == page_number) {
+
+return i;
+
+}
+
+}
+
+return -1;
+
+}
+
+int find_lru_page() {
+
+int lru_index = 0;
+
+for (int i = 1; i < FRAME_SIZE; i++) {
+
+if (frames[i].last_used_time < frames[lru_index].last_used_time) {
+
+lru_index = i;
+
+}
+
+}
+
+return lru_index;
+
+}
+
+void access_page(int page_number) {
+
+time_counter++;
+
+int page_index = find_page(page_number);
+if (page_index != -1) {
+
+frames[page_index].last_used_time = time_counter;
+
+printf("Page %d accessed, already in frame.\n", page_number);
+
+} else {
+
+int lru_index = find_lru_page();
+
+frames[lru_index].page_number = page_number;
+
+frames[lru_index].last_used_time = time_counter;
+
+printf("Page %d loaded into frame, replacing page %d.\n", page_number,
+
+frames[lru_index].page_number);
+
+}
+
+}
+
+void print_frames() {
+
+printf("Current frames:\n");
+
+for (int i = 0; i < FRAME_SIZE; i++) {
+
+printf("Frame %d: Page %d\n", i, frames[i].page_number);
+
+}
+
+}
+
+int main() {
+
+initialize_frames();
+
+access_page(1);
+
+print_frames();
+
+access_page(2);
+
+print_frames();
+
+access_page(3);
+
+print_frames();
+
+access_page(1);
+
+print_frames();
+
+access_page(4);
+print_frames();
+
+access_page(5);
+
+print_frames();
+
+return 0;
+
+}
